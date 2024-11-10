@@ -1,8 +1,8 @@
 const authenticate = async (username, password) => {
     if (username === 'A') {
-        return 'Manager';
+        return 'Hungry Panda';
     } else if (username === 'B') {
-        return 'Member';
+        return 'Exciting Giraffe';
     }
 
     return null;

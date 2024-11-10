@@ -1,27 +1,84 @@
-import React from "react";
-import { View, Text, Button } from 'react-native';
+import React, { useState } from "react";
+import { View, Text, Button, TouchableOpacity, ScrollView, Image } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 
-const HomeScreen = () => {
-    const { role } = useLocalSearchParams();
-    const router = useRouter();
+import { useUser } from "./contexts/userContext";
+import generateProblems from './utils/problemGenerator'  
+import Collapsible from "react-native-collapsible";
+import ProblemItem from "./components/problemItem";
 
-    const logout = () => {
-        console.log(`role is ${role}`);
-        router.replace('/login');
+const HomeScreen = () => {
+    const { name } = useLocalSearchParams();
+    const router = useRouter();
+    const { user, logout } = useUser();
+
+    const [showOpenProblems, setShowOpenProblems] = useState(false);
+    const [showClosedProblems, setShowClosedProblems] = useState(false);
+
+    var [openProblems, closedProblems]  = generateProblems(name);
+
+    const logoutClicked = () => {
+        logout();
+        router.replace("/login");
+    };
+
+    const createNewProblem = () => {
+        router.push('/createProblem');
     }
 
     return (
-        <View className="flex-1 justify-center items-center bg-gray-100 p-4">
-            <Text className="text-2xl font-bold mb-4">
-                {role === 'Manager' ? 'Manager' : 'Member'}
-            </Text>
-            {role === 'Manager' && <Text>This is the Manager's dashboard.</Text>}
-            {role === 'Member' && <Text>This is the Member's area.</Text>}
+        <ScrollView className="p-4 bg-white">
+            <View className="flex-row justify-between items-center mb-7">
+                <Text className="text-2xl font-bold">Welcome, {user?.name}!</Text>
+                <TouchableOpacity onPress={createNewProblem}>
+                    <Image 
+                        source={require('../assets/more.png')}
+                        style={{ width: 30, height: 30 }}
+                        resizeMode='contain'
+                    />
+                </TouchableOpacity>
+            </View>
+            
 
-            <Button title="Logout" onPress={logout} />
-        </View>
+            <TouchableOpacity
+                onPress={() => {
+                    setShowOpenProblems(!showOpenProblems);
+                }}
+                className="bg-blue-500 p-4 rounded-lg mb-2"
+            >
+                <Text className="text-white text-lg font-bold">
+                    Open Problems
+                </Text>
+            </TouchableOpacity>
+            <Collapsible collapsed={!showOpenProblems}>
+                <View className="p-2 border-spacing-3">
+                    {openProblems.map((problem, index) => {
+                        return <ProblemItem problem={problem} key={index} />;
+                    })}
+                </View>
+            </Collapsible>
+
+            <TouchableOpacity
+                onPress={() => {
+                    setShowClosedProblems(!showClosedProblems);
+                }}
+                className="bg-blue-500 p-4 rounded-lg mb-2"
+            >
+                <Text className="text-white text-lg font-bold">
+                    Closed Problems
+                </Text>
+            </TouchableOpacity>
+            <Collapsible collapsed={!showClosedProblems}>
+                <View className="p-2">
+                    {closedProblems.map((problem, index) => {
+                        return <ProblemItem problem={problem} key={index} />;
+                    })}
+                </View>
+            </Collapsible>
+
+            <Button title="Logout" onPress={logoutClicked} />
+        </ScrollView>
     );
-}
+};
 
 export default HomeScreen;
