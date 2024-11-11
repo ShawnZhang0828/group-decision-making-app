@@ -6,14 +6,15 @@ import {
     Alert,
     TouchableOpacity,
     Image,
-    FlatList,
     KeyboardAvoidingView,
     ScrollView,
-    Platform,
+    Platform
 } from "react-native";
 import { useRouter } from "expo-router";
 
+import CommonButton from "./components/commonButton";
 import AddListItem from "./components/addListItem";
+import Notification from "./components/notification";
 
 const CreateNewProblemScreen = () => {
     const router = useRouter();
@@ -25,6 +26,7 @@ const CreateNewProblemScreen = () => {
     const [participants, setParticipants] = useState([]);
     const [stakeholders, setStakeholders] = useState([]);
     const [options, setOptions] = useState([]);
+    const [notificationVisible, setNotificationVisible] = useState(false);
 
     const addItemClicked = (item, setItemFunc, list, setListFunc) => {
         if (item) {
@@ -42,6 +44,49 @@ const CreateNewProblemScreen = () => {
     const cancel = () => {
         router.replace("/home");
     };
+
+    // should save problem to the database
+    const saveProblem = () => {
+        showNotification();
+    };
+
+    const showNotification = () => setNotificationVisible(true);
+    const hideNotification = () => setNotificationVisible(false);
+
+    const clearInput = () => {
+        setProblem("");
+        setParticipant("");
+        setParticipants([]);
+        setStakeholder("");
+        setStakeholders([]);
+        setOption("");
+        setOptions([]);
+    };
+
+    const NotificationOptions = (
+        <View>
+            <View className="flex-row justify-center">
+                <TouchableOpacity
+                    onPress={() => {
+                        clearInput();
+                        hideNotification();
+                    }}
+                >
+                    <Text className="border-2 rounded-md p-2 mr-5">
+                        Add more
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => {
+                        hideNotification();
+                        router.replace("/home");
+                    }}
+                >
+                    <Text className="border-2 rounded-md p-2">Go Back</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
 
     return (
         <KeyboardAvoidingView
@@ -64,7 +109,10 @@ const CreateNewProblemScreen = () => {
                 <View className="w-1/7" />
             </View>
 
-            <ScrollView contentContainerStyle={{ paddingBottom: 30 }} automaticallyAdjustKeyboardInsets={true}>
+            <ScrollView
+                contentContainerStyle={{ paddingBottom: 30 }}
+                automaticallyAdjustKeyboardInsets={true}
+            >
                 <TextInput
                     placeholder="Enter the problem description"
                     value={problem}
@@ -127,9 +175,18 @@ const CreateNewProblemScreen = () => {
                         removeItemClicked(item, options, setOptions);
                     }}
                 />
-
-                {/* TODO: add save button to save the info */}
             </ScrollView>
+
+            {!notificationVisible && (
+                <CommonButton title="Save" onPress={saveProblem} />
+            )}
+            <Notification
+                visible={notificationVisible}
+                duration={5000}
+                message="Item Saved !"
+                children={NotificationOptions}
+                onHide={hideNotification}
+            />
         </KeyboardAvoidingView>
     );
 };
