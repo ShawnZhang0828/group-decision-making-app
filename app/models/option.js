@@ -1,6 +1,8 @@
 class Option {
-    constructor(content) {
+    constructor(content, id) {
         this.content = content;
+        this.id = id;
+        this.votes = 0;
     }
 }
 

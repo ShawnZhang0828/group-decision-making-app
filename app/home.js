@@ -6,6 +6,7 @@ import { useUser } from "./contexts/userContext";
 import generateProblems from './utils/problemGenerator'  
 import Collapsible from "react-native-collapsible";
 import ProblemItem from "./components/problemItem";
+import CommonButton from "./components/commonButton";
 
 const HomeScreen = () => {
     const { name } = useLocalSearchParams();
@@ -76,7 +77,7 @@ const HomeScreen = () => {
                 </View>
             </Collapsible>
 
-            <Button title="Logout" onPress={logoutClicked} />
+            <CommonButton title="Logout" onPress={logoutClicked} />
         </ScrollView>
     );
 };
