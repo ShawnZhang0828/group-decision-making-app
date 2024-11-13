@@ -14,6 +14,12 @@ const ClosedProblem = () => {
         problem.options[0]
     ).voters.length;
 
+    const getFinalDecisions = () => {
+        return problem.options.filter(
+            (option) => option.voters.length == maxVoters
+        );
+    };
+
     const chartConfig = {
         chartYSections: maxVoters + 1,
         barWidth: 35,
@@ -38,8 +44,8 @@ const ClosedProblem = () => {
     return (
         <View className="p-4">
             <View className="flex-col mb-6">
-                <Text className="font-bold text-lg">Topic</Text>
-                <Text>{problem.description}</Text>
+                <Text className="font-bold text-xl">Topic</Text>
+                <Text className="text-lg">{problem.description}</Text>
             </View>
 
             <ScrollView>
@@ -88,9 +94,18 @@ const ClosedProblem = () => {
                     />
                 </View>
 
-                <Text className="font-bold text-lg">Final Decision</Text>
+                <View>
+                    <Text className="font-bold text-xl">Final Decision</Text>
+                    {getFinalDecisions().map((option, index) => {
+                        return (
+                            <View className="border-b-2 border-gray-500">
+                                <Text key={index} className="text-lg">{index+1}. {option.content}</Text>
+                            </View>
+                        )
+                    })}
+                </View>
 
-                {/* TODO: Add content here */}
+
             </ScrollView>
         </View>
     );
