@@ -56,11 +56,11 @@ const generateProblems = (name) => {
         "Rachel Green",
     ]);
     problem3.addOptions([
-        "Friday, December 1",
-        "Saturday, December 2",
-        "Wednesday, December 6",
-        "Thursday, December 7",
-        "Monday, December 11",
+        "Fri.",
+        "Sat.",
+        "Wed.",
+        "Thur.",
+        "Mon.",
     ]);
     problem3.completeAllWithRandomResponses();
     // Problem 4
@@ -69,7 +69,7 @@ const generateProblems = (name) => {
         "Decide whether the team should release the next software version next month"
     );
     problem4.addParticipants(["Samuel Jackson", "Tony Stark", "Uma Thurman"]);
-    problem4.addOptions(["yes", "no"]);
+    problem4.addOptions(["Yes", "No"]);
     problem4.completeAllWithRandomResponses();
 
     const openProblems = [problem1, problem2];

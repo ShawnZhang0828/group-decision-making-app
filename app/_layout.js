@@ -19,6 +19,14 @@ const Layout = () => {
                     name="createProblem"
                     options={{ title: "Create New Problem" }}
                 />
+                <Stack.Screen 
+                    name="openProblem"
+                    options={{ title: "Problem" }}
+                />
+                <Stack.Screen 
+                    name="closedProblem"
+                    options={{ title: "Problem Closed" }}
+                />
             </Stack>
         </UserProvider>
     );

@@ -18,7 +18,7 @@ class Problem {
     }
 
     addParticipants(participants) {
-        participants.forEach(participant => {
+        participants.forEach((participant) => {
             this.addParticipant(participant);
         });
     }
@@ -32,36 +32,50 @@ class Problem {
     addOptions(options) {
         options.forEach((option) => {
             this.addOption(option);
-        })
+        });
     }
 
     completeWithRandomResponses(name) {
         this.participants.set(name, true);
-        const randomOption = Math.floor(Math.random() * this.options.size);
-        this.responses.set(name, new Response(name, randomOption, 'This is a placeholder for the rationale of this decision. The author of this response should specify the pros and cons for this decision.'))
+        const randomOption = Math.floor(Math.random() * this.options.length);
+        const option = this.options[randomOption];
+
+        this.responses.set(
+            name,
+            new Response(
+                name,
+                option,
+                "This is a placeholder for the rationale of this decision. The author of this response should specify the pros and cons for this decision."
+            )
+        );
+        option.voters.push(name);
     }
 
     completeAllWithRandomResponses() {
         Array.from(this.participants.keys()).forEach((name) => {
             this.completeWithRandomResponses(name);
-        })
+        });
     }
 
     getFinalDecision() {
-        return this.options.reduce((max, option) => (option.votes > max.votes ? option : max), this.options[0]);
+        return this.options.reduce(
+            (max, option) =>
+                option.voters.length > max.voters.length ? option : max,
+            this.options[0]
+        );
     }
 
     getProblemCompleted() {
-        return Array.from(this.participants.values()).every(value => value);
+        return Array.from(this.participants.values()).every((value) => value);
     }
 
     getCurrentDate() {
         var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); 
+        var dd = String(today.getDate()).padStart(2, "0");
+        var mm = String(today.getMonth() + 1).padStart(2, "0");
         var yyyy = today.getFullYear();
 
-        today = mm + '/' + dd + '/' + yyyy;
+        today = mm + "/" + dd + "/" + yyyy;
 
         return today;
     }
