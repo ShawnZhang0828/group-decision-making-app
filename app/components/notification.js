@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, Animated } from "react-native";
+import { View, Text, Animated, Modal } from "react-native";
 
 const Notification = ({ visible, duration, message, children, onHide }) => {
     const [slideAnimation] = useState(new Animated.Value(150));
@@ -9,14 +9,14 @@ const Notification = ({ visible, duration, message, children, onHide }) => {
             Animated.timing(slideAnimation, {
                 toValue: 0,
                 duration: 300,
-                useNativeDriver: true
+                useNativeDriver: true,
             }).start();
-    
+
             const timer = setTimeout(() => {
                 Animated.timing(slideAnimation, {
                     toValue: 150,
                     duration: 300,
-                    useNativeDriver: true
+                    useNativeDriver: true,
                 }).start(() => {
                     onHide();
                 });
@@ -29,16 +29,25 @@ const Notification = ({ visible, duration, message, children, onHide }) => {
     if (!visible) return null;
 
     return (
-        <Animated.View
-            style={{
-                transform: [{ translateY: slideAnimation }]
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={visible}
+            onRequestClose={() => {
+                Alert.alert("Modal has been closed.");
+                setModalVisible(!modalVisible);
             }}
-            className="absolute self-center bottom-8 bg-indigo-200 p-4 rounded-lg max-w-[90%] w-auto"
         >
-            <Text className="text-blue-950 text-center mb-2 font-bold text-lg">{message}</Text>
-            {children}
-        </Animated.View>
+            <View className="bg-slate-400/80 flex-1 justify-center items-center">
+                <View className="bg-indigo-100 py-6 px-8 rounded-lg w-fit max-w-lg items-center">
+                    <Text className="text-blue-950 text-center mb-4 font-bold text-lg">
+                        {message}
+                    </Text>
+                    {children}
+                </View>
+            </View>
+        </Modal>
     );
-}
+};
 
 export default Notification;

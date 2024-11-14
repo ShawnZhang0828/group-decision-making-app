@@ -8,7 +8,7 @@ import {
     Image,
     KeyboardAvoidingView,
     ScrollView,
-    Platform
+    Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
 
@@ -93,27 +93,15 @@ const CreateNewProblemScreen = () => {
             className="flex-1 m-3"
             behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-            <View className="flex-row justify-between items-center mb-7">
-                <TouchableOpacity onPress={cancel}>
-                    <Image
-                        className="flex-row w-6 h-6"
-                        source={require("../assets/back.png")}
-                        resizeMode="contain"
-                    />
-                </TouchableOpacity>
-
-                <Text className="text-2xl font-bold text-center">
-                    Create a New Problem
-                </Text>
-
-                <View className="w-1/7" />
-            </View>
-
             <ScrollView
                 contentContainerStyle={{ paddingBottom: 30 }}
                 automaticallyAdjustKeyboardInsets={true}
             >
+                <Text className="text-lg font-bold mb-3 mt-5">
+                    Describe the Problem
+                </Text>
                 <TextInput
+                    multiline={true}
                     placeholder="Enter the problem description"
                     value={problem}
                     onChange={setProblem}
@@ -177,12 +165,10 @@ const CreateNewProblemScreen = () => {
                 />
             </ScrollView>
 
-            {!notificationVisible && (
-                <CommonButton title="Save" onPress={saveProblem} />
-            )}
+            <CommonButton title="Save" onPress={saveProblem} />
             <Notification
                 visible={notificationVisible}
-                duration={5000}
+                duration={10000}
                 message="Item Saved !"
                 children={NotificationOptions}
                 onHide={hideNotification}

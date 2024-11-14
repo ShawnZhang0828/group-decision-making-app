@@ -98,8 +98,8 @@ const ClosedProblem = () => {
                     <Text className="font-bold text-xl">Final Decision</Text>
                     {getFinalDecisions().map((option, index) => {
                         return (
-                            <View className="border-b-2 border-gray-500">
-                                <Text key={index} className="text-lg">{index+1}. {option.content}</Text>
+                            <View className="border-b-2 border-gray-500" key={index}>
+                                <Text className="text-lg">{index+1}. {option.content}</Text>
                             </View>
                         )
                     })}

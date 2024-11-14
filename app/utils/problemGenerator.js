@@ -1,4 +1,4 @@
-import Problem from '../models/problem';
+import Problem from "../models/problem";
 
 const generateProblems = (name) => {
     // Problem 1
@@ -55,13 +55,7 @@ const generateProblems = (name) => {
         "Quincy Jones",
         "Rachel Green",
     ]);
-    problem3.addOptions([
-        "Fri.",
-        "Sat.",
-        "Wed.",
-        "Thur.",
-        "Mon.",
-    ]);
+    problem3.addOptions(["Fri.", "Sat.", "Wed.", "Thur.", "Mon."]);
     problem3.completeAllWithRandomResponses();
     // Problem 4
     const problem4 = new Problem(
@@ -71,13 +65,32 @@ const generateProblems = (name) => {
     problem4.addParticipants(["Samuel Jackson", "Tony Stark", "Uma Thurman"]);
     problem4.addOptions(["Yes", "No"]);
     problem4.completeAllWithRandomResponses();
+    // Problem 5
+    const problem5 = new Problem(
+        name,
+        "Choose a theme for the company's annual gala"
+    );
+    problem5.addParticipants([
+        "Alice Cooper",
+        "Bruce Wayne",
+        "Clark Kent",
+        "Diana Prince",
+        "Eleanor Rigby",
+        "Frodo Baggins",
+        "Gandalf the Grey",
+    ]);
+    problem5.addOptions([
+        "Masquerade Ball",
+        "Hollywood Glamour",
+        "Casino Night",
+        "Winter Wonderland",
+    ]);
+    problem5.completeAllWithRandomResponses();
 
     const openProblems = [problem1, problem2];
-    const closedProblems = [problem3, problem4];
+    const closedProblems = [problem3, problem4, problem5];
 
     return [openProblems, closedProblems];
-}
-
-
+};
 
 export default generateProblems;

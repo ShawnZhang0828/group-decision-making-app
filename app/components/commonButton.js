@@ -1,23 +1,27 @@
 import React from "react";
-import { TouchableOpacity, Text } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 
 const CommonButton = ({ title, onPress }) => {
     return (
-        <TouchableOpacity
-            onPress={onPress}
-            className="mb-[10%] rounded-lg bg-indigo-200 w-[40%] py-2 self-center"
-            style={{
-                shadowColor: "#000",
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.2,
-                shadowRadius: 2,
-                elevation: 3,
-            }}
-        >
-            <Text className="text-black text-lg font-bold text-center">
-                {title}
-            </Text>
-        </TouchableOpacity>
+        <View className="absolute bottom-10 left-0 right-0 items-center">
+            <View className="w-[50%]">
+                <TouchableOpacity
+                    onPress={onPress}
+                    className="rounded-lg bg-indigo-200 py-3 px-5 self-center"
+                    style={{
+                        shadowColor: "#000",
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.2,
+                        shadowRadius: 2,
+                        elevation: 3,
+                    }}
+                >
+                    <Text className="text-black text-xl font-bold text-center">
+                        {title}
+                    </Text>
+                </TouchableOpacity>
+            </View>
+        </View>
     );
 };
 

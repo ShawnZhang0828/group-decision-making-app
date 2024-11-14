@@ -2,20 +2,22 @@ import React, { useState } from "react";
 import {
     View,
     Text,
-    Button,
     TouchableOpacity,
-    ScrollView,
+    FlatList,
     Image,
+    Dimensions,
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
+import Collapsible from "react-native-collapsible";
 
 import { useUser } from "./contexts/userContext";
 import generateProblems from "./utils/problemGenerator";
-import Collapsible from "react-native-collapsible";
 import ProblemItem from "./components/problemItem";
 import CommonButton from "./components/commonButton";
 
 const HomeScreen = () => {
+    const windowHeight = Dimensions.get("window").height;
+
     const { name } = useLocalSearchParams();
     const router = useRouter();
     const { user, logout } = useUser();
@@ -35,7 +37,7 @@ const HomeScreen = () => {
     };
 
     return (
-        <View className="p-4">
+        <View className="p-4 h-full">
             <View className="flex-row justify-between items-center mb-7">
                 <Text className="text-2xl font-bold">
                     Welcome, {user?.name}!
@@ -49,7 +51,7 @@ const HomeScreen = () => {
                 </TouchableOpacity>
             </View>
 
-            <ScrollView>
+            <View className="h-[80%]">
                 <TouchableOpacity
                     onPress={() => {
                         setShowOpenProblems(!showOpenProblems);
@@ -61,12 +63,20 @@ const HomeScreen = () => {
                     </Text>
                 </TouchableOpacity>
                 <Collapsible collapsed={!showOpenProblems}>
-                    <View className="p-2 border-spacing-3">
-                        {openProblems.map((problem, index) => {
-                            return (
-                                <ProblemItem problem={problem} key={index} />
-                            );
-                        })}
+                    <View
+                        style={{
+                            maxHeight: windowHeight * 0.3,
+                            overflow: "hidden",
+                        }}
+                    >
+                        <FlatList
+                            data={openProblems}
+                            renderItem={({ item }) => (
+                                <ProblemItem problem={item} />
+                            )}
+                            keyExtractor={(item, index) => index.toString()}
+                            contentContainerStyle={{ padding: 8 }}
+                        />
                     </View>
                 </Collapsible>
 
@@ -81,19 +91,25 @@ const HomeScreen = () => {
                     </Text>
                 </TouchableOpacity>
                 <Collapsible collapsed={!showClosedProblems}>
-                    <View className="p-2">
-                        {closedProblems.map((problem, index) => {
-                            return (
-                                <ProblemItem problem={problem} key={index} />
-                            );
-                        })}
+                    <View
+                        style={{
+                            maxHeight: windowHeight * 0.26,
+                            overflow: "hidden",
+                        }}
+                    >
+                        <FlatList
+                            data={closedProblems}
+                            renderItem={({ item }) => (
+                                <ProblemItem problem={item} />
+                            )}
+                            keyExtractor={(item, index) => index.toString()}
+                            contentContainerStyle={{ padding: 8 }}
+                        />
                     </View>
                 </Collapsible>
-            </ScrollView>
-
-            <View className="pt-3">
-                <CommonButton title="Logout" onPress={logoutClicked} />
             </View>
+
+            <CommonButton title="Logout" onPress={logoutClicked} />
         </View>
     );
 };
