@@ -82,6 +82,19 @@ class Problem {
 
         return today;
     }
+
+    // used by JSON.stringify - convert Problem object to a JSON string properly
+    toJSON() {
+        return {
+            creator: this.creator,
+            description: this.description,
+            createdDate: this.createdDate,
+            options: this.options,
+            participants: Array.from(this.participants).map(([participant, completed]) => ({participant, completed})),
+            responses: Array.from(this.responses).map(([_, response]) => response),    
+        };
+    }
+
 }
 
 export default Problem;

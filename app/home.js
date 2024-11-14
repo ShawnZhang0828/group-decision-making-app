@@ -7,7 +7,7 @@ import {
     Image,
     Dimensions,
 } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
+import { useRouter } from "expo-router";
 import Collapsible from "react-native-collapsible";
 
 import { useUser } from "./contexts/userContext";
@@ -20,7 +20,6 @@ const HomeScreen = () => {
 
     const windowHeight = Dimensions.get("window").height;
 
-    const { name } = useLocalSearchParams();
     const router = useRouter();
     const { user, logout } = useUser();
 
@@ -28,7 +27,7 @@ const HomeScreen = () => {
     const [showClosedProblems, setShowClosedProblems] = useState(false);
 
     // generate the placeholder problems
-    var [openProblems, closedProblems] = generateProblems(name);
+    var [openProblems, closedProblems] = generateProblems();
 
     const logoutClicked = () => {
         logout();
@@ -43,7 +42,7 @@ const HomeScreen = () => {
         <View className="p-4 h-full">
             <View className="flex-row justify-between items-center mb-7">
                 <Text className="text-2xl font-bold">
-                    Welcome, {user?.name}!
+                    Welcome, {user?.name} !
                 </Text>
                 <TouchableOpacity onPress={createNewProblem}>
                     <Image
