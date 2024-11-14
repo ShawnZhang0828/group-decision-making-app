@@ -16,6 +16,8 @@ import authService from "./services/authService";
 import { useUser } from "./contexts/userContext";
 
 const LoginScreen = () => {
+    console.log("Login Page Rendered");
+
     const [fontsLoaded] = useFonts({
         CustomFont: require("../assets/font/PlaywriteDEGrund-Regular.ttf"),
     });
@@ -26,8 +28,8 @@ const LoginScreen = () => {
     const { login } = useUser();
 
     const loginClicked = async () => {
+        // wait for the authentication service to log the user in
         const name = await authService.authenticate(username, password);
-        console.log(name);
         if (name) {
             login(name);
             router.replace({
@@ -35,7 +37,7 @@ const LoginScreen = () => {
                 params: { name },
             });
         } else {
-            Alert.alert("Login failed", "Invalid username");
+            Alert.alert("Login failed", "Invalid username/password");
         }
     };
 

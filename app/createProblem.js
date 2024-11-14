@@ -5,7 +5,6 @@ import {
     TextInput,
     Alert,
     TouchableOpacity,
-    Image,
     KeyboardAvoidingView,
     ScrollView,
     Platform,
@@ -17,6 +16,8 @@ import AddListItem from "./components/addListItem";
 import Notification from "./components/notification";
 
 const CreateNewProblemScreen = () => {
+    console.log("Create Problem Page Rendered");
+
     const router = useRouter();
 
     const [problem, setProblem] = useState("");
@@ -28,6 +29,7 @@ const CreateNewProblemScreen = () => {
     const [options, setOptions] = useState([]);
     const [notificationVisible, setNotificationVisible] = useState(false);
 
+    // add a new item to one of participants, stakeholders, or options
     const addItemClicked = (item, setItemFunc, list, setListFunc) => {
         if (item) {
             setListFunc([...list, item]);
@@ -37,21 +39,15 @@ const CreateNewProblemScreen = () => {
         }
     };
 
+    // remove an item from one of participants, stakeholders, or options
     const removeItemClicked = (item, list, setListFunc) => {
         setListFunc(list.filter((i) => i !== item));
     };
 
-    const cancel = () => {
-        router.replace("/home");
-    };
-
     // should save problem to the database
     const saveProblem = () => {
-        showNotification();
+        setNotificationVisible(true);
     };
-
-    const showNotification = () => setNotificationVisible(true);
-    const hideNotification = () => setNotificationVisible(false);
 
     const clearInput = () => {
         setProblem("");
@@ -63,13 +59,14 @@ const CreateNewProblemScreen = () => {
         setOptions([]);
     };
 
+    // content within the "Problem Created Popup"
     const NotificationOptions = (
         <View>
             <View className="flex-row justify-center">
                 <TouchableOpacity
                     onPress={() => {
                         clearInput();
-                        hideNotification();
+                        setNotificationVisible(false);
                     }}
                 >
                     <Text className="border-2 rounded-md p-2 mr-5">
@@ -78,7 +75,7 @@ const CreateNewProblemScreen = () => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => {
-                        hideNotification();
+                        setNotificationVisible(false);
                         router.replace("/home");
                     }}
                 >
@@ -171,7 +168,7 @@ const CreateNewProblemScreen = () => {
                 duration={10000}
                 message="Item Saved !"
                 children={NotificationOptions}
-                onHide={hideNotification}
+                onHide={() => setNotificationVisible(false)}
             />
         </KeyboardAvoidingView>
     );

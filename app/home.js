@@ -16,6 +16,8 @@ import ProblemItem from "./components/problemItem";
 import CommonButton from "./components/commonButton";
 
 const HomeScreen = () => {
+    console.log("Home Page Rendered");
+
     const windowHeight = Dimensions.get("window").height;
 
     const { name } = useLocalSearchParams();
@@ -25,6 +27,7 @@ const HomeScreen = () => {
     const [showOpenProblems, setShowOpenProblems] = useState(false);
     const [showClosedProblems, setShowClosedProblems] = useState(false);
 
+    // generate the placeholder problems
     var [openProblems, closedProblems] = generateProblems(name);
 
     const logoutClicked = () => {
@@ -74,7 +77,7 @@ const HomeScreen = () => {
                             renderItem={({ item }) => (
                                 <ProblemItem problem={item} />
                             )}
-                            keyExtractor={(item, index) => index.toString()}
+                            keyExtractor={(_, index) => index.toString()}
                             contentContainerStyle={{ padding: 8 }}
                         />
                     </View>
@@ -93,7 +96,7 @@ const HomeScreen = () => {
                 <Collapsible collapsed={!showClosedProblems}>
                     <View
                         style={{
-                            maxHeight: windowHeight * 0.26,
+                            maxHeight: windowHeight * (showOpenProblems ? 0.26 : 0.5),
                             overflow: "hidden",
                         }}
                     >
@@ -102,7 +105,7 @@ const HomeScreen = () => {
                             renderItem={({ item }) => (
                                 <ProblemItem problem={item} />
                             )}
-                            keyExtractor={(item, index) => index.toString()}
+                            keyExtractor={(_, index) => index.toString()}
                             contentContainerStyle={{ padding: 8 }}
                         />
                     </View>

@@ -35,6 +35,7 @@ class Problem {
         });
     }
 
+    // generate a random response from a participant
     completeWithRandomResponses(name) {
         this.participants.set(name, true);
         const randomOption = Math.floor(Math.random() * this.options.length);
@@ -57,6 +58,7 @@ class Problem {
         });
     }
 
+    // get the decision with the largest number of votes
     getFinalDecision() {
         return this.options.reduce(
             (max, option) =>
@@ -65,6 +67,7 @@ class Problem {
         );
     }
 
+    // get a bool that tells if the decision has been made
     getProblemCompleted() {
         return Array.from(this.participants.values()).every((value) => value);
     }

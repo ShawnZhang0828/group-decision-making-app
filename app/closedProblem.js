@@ -1,25 +1,33 @@
-import React, { useState } from "react";
+import React from "react";
 import { ScrollView, Text, View, Dimensions } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
 import { useLocalSearchParams } from "expo-router";
 
 const ClosedProblem = () => {
+    console.log("Closed Problem Page Rendered");
+
+    // accept the problem from route parameters
     const { string_problem } = useLocalSearchParams();
+    // reconstruct the problem object
     const problem = JSON.parse(string_problem);
 
     const screenWidth = Dimensions.get("window").width;
+
+    // get the maximum number of votes among all options
     const maxVoters = problem.options.reduce(
         (max, option) =>
             option.voters.length > max.voters.length ? option : max,
         problem.options[0]
     ).voters.length;
 
+    // get all options that share the maximum number of voters
     const getFinalDecisions = () => {
         return problem.options.filter(
             (option) => option.voters.length == maxVoters
         );
     };
 
+    // screen configuration for the bar chart
     const chartConfig = {
         chartYSections: maxVoters + 1,
         barWidth: 35,
@@ -29,6 +37,7 @@ const ClosedProblem = () => {
             (problem.options.length + 1),
     };
 
+    // construct the data used in the bar chart
     const chartData = Array.from(
         problem.options.map((option) => {
             return {
@@ -98,14 +107,17 @@ const ClosedProblem = () => {
                     <Text className="font-bold text-xl">Final Decision</Text>
                     {getFinalDecisions().map((option, index) => {
                         return (
-                            <View className="border-b-2 border-gray-500" key={index}>
-                                <Text className="text-lg">{index+1}. {option.content}</Text>
+                            <View
+                                className="border-b-2 border-gray-500"
+                                key={index}
+                            >
+                                <Text className="text-lg">
+                                    {index + 1}. {option.content}
+                                </Text>
                             </View>
-                        )
+                        );
                     })}
                 </View>
-
-
             </ScrollView>
         </View>
     );

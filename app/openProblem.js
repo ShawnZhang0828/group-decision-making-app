@@ -13,7 +13,7 @@ import CommonButton from "./components/commonButton";
 import Notification from "./components/notification";
 
 const OpenProblem = () => {
-    console.log("Open Problems Page");
+    console.log("Open Problems Page Rendered");
 
     const [selectedID, setSelectedID] = useState(null);
     const [inputEditable, setInputEditable] = useState(false);
@@ -22,9 +22,12 @@ const OpenProblem = () => {
 
     const router = useRouter();
 
+    // accept the problem from route parameters
     const { string_problem } = useLocalSearchParams();
+    // reconstruct the problem object
     const problem = JSON.parse(string_problem);
 
+    // construct option data for the option list
     const optionsData = problem.options.map((option) => {
         return {
             id: option.id,
@@ -32,9 +35,10 @@ const OpenProblem = () => {
         };
     });
 
+    // render each option component in the FlatList
     const renderOption = ({ item }) => {
-        const isSelected = item.id === selectedID;
-        const backgroundColor = isSelected ? "#42a15d" : "#e1e8e3";
+        // use a different color for the selected option
+        const backgroundColor = item.id === selectedID ? "#42a15d" : "#e1e8e3";
 
         const handleClick = () => {
             setSelectedID(item.id);
@@ -54,6 +58,7 @@ const OpenProblem = () => {
         );
     };
 
+    // content within the "Decision Saved Popup"
     const notificationContent = (
         <View className="flex-row justify-center">
             <TouchableOpacity
