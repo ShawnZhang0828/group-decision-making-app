@@ -23,6 +23,8 @@ const generateProblems = () => {
     ]);
     problem1.completeWithRandomResponses("Cheerful Otter");
     problem1.completeWithRandomResponses("Lazy Koala");
+    problem1.generatePros();
+    problem1.generateCons();
     // Problem 2
     const problem2 = new Problem("Hungry Panda", "Pick a gift for Jane Doe's retirement");
     problem2.addParticipants([
@@ -45,6 +47,8 @@ const generateProblems = () => {
     problem2.completeWithRandomResponses("Friendly Bear");
     problem2.completeWithRandomResponses("Curious Owl");
     problem2.completeWithRandomResponses("Joyful Dolphin");
+    problem2.generatePros();
+    problem2.generateCons();
     // Problem 3
     const problem3 = new Problem("Hungry Panda", "Pick a date for team's bowling event");
     problem3.addParticipants([
@@ -57,6 +61,8 @@ const generateProblems = () => {
     ]);
     problem3.addOptions(["Fri.", "Sat.", "Wed.", "Thur.", "Mon."]);
     problem3.completeAllWithRandomResponses();
+    problem3.generatePros();
+    problem3.generateCons();
     // Problem 4
     const problem4 = new Problem(
         "Gentle Tiger",
@@ -65,6 +71,8 @@ const generateProblems = () => {
     problem4.addParticipants(["Hungry Panda", "Cheerful Otter", "Mighty Narwhal"]);
     problem4.addOptions(["Yes", "No"]);
     problem4.completeAllWithRandomResponses();
+    problem4.generatePros();
+    problem4.generateCons();
     // Problem 5
     const problem5 = new Problem(
         "Happy Dolphin",
@@ -86,6 +94,8 @@ const generateProblems = () => {
         "Winter Wonderland",
     ]);
     problem5.completeAllWithRandomResponses();
+    problem5.generatePros();
+    problem5.generateCons();
 
     const openProblems = [problem1, problem2];
     const closedProblems = [problem3, problem4, problem5];

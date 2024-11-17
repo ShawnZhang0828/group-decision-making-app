@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { ScrollView, Text, View, Dimensions } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
 import { useLocalSearchParams } from "expo-router";
 
 const ClosedProblem = () => {
     console.log("Closed Problem Page Rendered");
+
+    const [selectedIndex, setSelectedIndex] = useState(null);
 
     // accept the problem from route parameters
     const { string_problem } = useLocalSearchParams();
@@ -29,7 +31,7 @@ const ClosedProblem = () => {
 
     // screen configuration for the bar chart
     const chartConfig = {
-        chartYSections: maxVoters + 1,
+        chartYSections: maxVoters + (maxVoters >= 3 ? 2 : 1),
         barWidth: 35,
         width: screenWidth * 0.9,
         spacing:
@@ -57,8 +59,24 @@ const ClosedProblem = () => {
                 <Text className="text-lg">{problem.description}</Text>
             </View>
 
-            <ScrollView>
-                <View className="mb-6">
+            <View>
+                <Text className="font-bold text-xl">Final Decision</Text>
+                {getFinalDecisions().map((option, index) => {
+                    return (
+                        <View
+                            className="border-b-2 border-gray-500"
+                            key={index}
+                        >
+                            <Text className="text-lg">
+                                {index + 1}. {option.content}
+                            </Text>
+                        </View>
+                    );
+                })}
+            </View>
+
+            <ScrollView className={`h-[73%] ${selectedIndex !== null ? "border-b-2 border-gray-500" : ""}`}>
+                <View className="mt-6">
                     <Text className="font-bold text-lg">Result</Text>
                     <BarChart
                         data={chartData}
@@ -76,23 +94,31 @@ const ClosedProblem = () => {
                             const option = problem.options[index];
                             return (
                                 <View
-                                    className="bg-gray-200 p-1 rounded"
+                                    className="bg-indigo-100 p-2 rounded-md shadow-inner"
                                     style={{
                                         position: "absolute",
                                         bottom: 0,
                                         transform: [{ translateY: 65 }],
-                                        marginBottom: 4,
+                                        marginBottom: 8, // Slightly larger margin for spacing
                                     }}
                                 >
-                                    <Text className="text-xs font-bold self-center">
-                                        {option.content}
+                                    {/* Header */}
+                                    <Text className="text-sm font-bold text-center text-gray-700 mb-1">
+                                        Voted By
                                     </Text>
+
+                                    {/* List of Voters */}
                                     {option.voters.map((voter, voterIndex) => (
                                         <View
                                             key={voterIndex}
-                                            className="border-b-2 border-gray-500"
+                                            className={`border-b ${
+                                                voterIndex ===
+                                                option.voters.length - 1
+                                                    ? "border-b-0"
+                                                    : "border-gray-700"
+                                            }`}
                                         >
-                                            <Text className="text-xs text-black">
+                                            <Text className="text-sm text-gray-800 text-center">
                                                 {voter}
                                             </Text>
                                         </View>
@@ -100,24 +126,53 @@ const ClosedProblem = () => {
                                 </View>
                             );
                         }}
+                        onPress={(_, index) => {
+                            setSelectedIndex(index);
+                        }}
                     />
                 </View>
 
-                <View>
-                    <Text className="font-bold text-xl">Final Decision</Text>
-                    {getFinalDecisions().map((option, index) => {
-                        return (
-                            <View
-                                className="border-b-2 border-gray-500"
-                                key={index}
-                            >
-                                <Text className="text-lg">
-                                    {index + 1}. {option.content}
-                                </Text>
-                            </View>
-                        );
-                    })}
-                </View>
+                {selectedIndex !== null && (
+                    <View className="p-4">
+                        {/* Pros Section */}
+                        <View className="mb-6">
+                            <Text className="font-bold text-xl mb-2 text-green-700">
+                                Pros
+                            </Text>
+                            {problem.options[selectedIndex].pros.map(
+                                (pro, index) => (
+                                    <View key={index} className="mb-1">
+                                        <Text className="font-semibold text-base text-gray-800">
+                                            {pro.participant}
+                                        </Text>
+                                        <Text className="text-sm text-gray-600">
+                                            {pro.pro}
+                                        </Text>
+                                    </View>
+                                )
+                            )}
+                        </View>
+
+                        {/* Cons Section */}
+                        <View>
+                            <Text className="font-bold text-xl mb-2 text-red-700">
+                                Cons
+                            </Text>
+                            {problem.options[selectedIndex].cons.map(
+                                (con, index) => (
+                                    <View key={index} className="mb-1">
+                                        <Text className="font-semibold text-base text-gray-800">
+                                            {con.participant}
+                                        </Text>
+                                        <Text className="text-sm text-gray-600">
+                                            {con.con}
+                                        </Text>
+                                    </View>
+                                )
+                            )}
+                        </View>
+                    </View>
+                )}
             </ScrollView>
         </View>
     );

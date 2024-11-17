@@ -1,5 +1,6 @@
 import Option from "./option";
 import Response from "./response";
+import randomString from "../utils/randomGenerator";
 
 class Problem {
     constructor(creator, description) {
@@ -55,6 +56,34 @@ class Problem {
     completeAllWithRandomResponses() {
         Array.from(this.participants.keys()).forEach((name) => {
             this.completeWithRandomResponses(name);
+        });
+    }
+
+    // generate random pros and cons
+    generatePros() {
+        this.options.forEach(option => {
+            Array.from(this.participants.keys()).forEach(participant => {
+                // each participant has 40% of filling in the pro for an option
+                const hasPro = Math.random() < 0.4;
+                if (hasPro) {
+                    const length = Math.floor(Math.random(30)) + 20;
+                    const pro = randomString(length);
+                    option.pros.set(participant, pro);
+                }
+            });
+        });
+    }
+    generateCons() {
+        this.options.forEach(option => {
+            Array.from(this.participants.keys()).forEach(participant => {
+                // each participant has 40% of filling in the con for an option
+                const hasCon = Math.random() < 0.4;
+                if (hasCon) {
+                    const length = Math.floor(Math.random()*30) + 20;
+                    const con = randomString(length);
+                    option.cons.set(participant, con);
+                }
+            });
         });
     }
 
