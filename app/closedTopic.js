@@ -3,28 +3,28 @@ import { ScrollView, Text, View, Dimensions } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
 import { useLocalSearchParams } from "expo-router";
 
-const ClosedProblem = () => {
-    console.log("Closed Problem Page Rendered");
+const ClosedTopic = () => {
+    console.log("Closed Topic Page Rendered");
 
     const [selectedIndex, setSelectedIndex] = useState(null);
 
-    // accept the problem from route parameters
-    const { string_problem } = useLocalSearchParams();
-    // reconstruct the problem object
-    const problem = JSON.parse(string_problem);
+    // accept the topic from route parameters
+    const { string_topic } = useLocalSearchParams();
+    // reconstruct the topic object
+    const topic = JSON.parse(string_topic);
 
     const screenWidth = Dimensions.get("window").width;
 
     // get the maximum number of votes among all options
-    const maxVoters = problem.options.reduce(
+    const maxVoters = topic.options.reduce(
         (max, option) =>
             option.voters.length > max.voters.length ? option : max,
-        problem.options[0]
+        topic.options[0]
     ).voters.length;
 
     // get all options that share the maximum number of voters
     const getFinalDecisions = () => {
-        return problem.options.filter(
+        return topic.options.filter(
             (option) => option.voters.length == maxVoters
         );
     };
@@ -35,13 +35,13 @@ const ClosedProblem = () => {
         barWidth: 35,
         width: screenWidth * 0.9,
         spacing:
-            (screenWidth * 0.75 - problem.options.length * 35) /
-            (problem.options.length + 1),
+            (screenWidth * 0.75 - topic.options.length * 35) /
+            (topic.options.length + 1),
     };
 
     // construct the data used in the bar chart
     const chartData = Array.from(
-        problem.options.map((option) => {
+        topic.options.map((option) => {
             return {
                 value: option.voters.length,
                 label: option.content,
@@ -56,7 +56,7 @@ const ClosedProblem = () => {
         <View className="p-4">
             <View className="flex-col mb-6">
                 <Text className="font-bold text-xl">Topic</Text>
-                <Text className="text-lg">{problem.description}</Text>
+                <Text className="text-lg">{topic.description}</Text>
             </View>
 
             <View>
@@ -91,7 +91,7 @@ const ClosedProblem = () => {
                         leftShiftForTooltip={20}
                         leftShiftForLastIndexTooltip={20}
                         renderTooltip={(_, index) => {
-                            const option = problem.options[index];
+                            const option = topic.options[index];
                             return (
                                 <View
                                     className="bg-indigo-100 p-2 rounded-md shadow-inner"
@@ -139,7 +139,7 @@ const ClosedProblem = () => {
                             <Text className="font-bold text-xl mb-2 text-green-700">
                                 Pros
                             </Text>
-                            {problem.options[selectedIndex].pros.map(
+                            {topic.options[selectedIndex].pros.map(
                                 (pro, index) => (
                                     <View key={index} className="mb-1">
                                         <Text className="font-semibold text-base text-gray-800">
@@ -158,7 +158,7 @@ const ClosedProblem = () => {
                             <Text className="font-bold text-xl mb-2 text-red-700">
                                 Cons
                             </Text>
-                            {problem.options[selectedIndex].cons.map(
+                            {topic.options[selectedIndex].cons.map(
                                 (con, index) => (
                                     <View key={index} className="mb-1">
                                         <Text className="font-semibold text-base text-gray-800">
@@ -178,4 +178,4 @@ const ClosedProblem = () => {
     );
 };
 
-export default ClosedProblem;
+export default ClosedTopic;

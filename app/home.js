@@ -11,8 +11,8 @@ import { useRouter } from "expo-router";
 import Collapsible from "react-native-collapsible";
 
 import { useUser } from "./contexts/userContext";
-import generateProblems from "./utils/problemGenerator";
-import ProblemItem from "./components/problemItem";
+import generateTopics from "./utils/topicGenerator";
+import TopicItem from "./components/topicItem";
 import CommonButton from "./components/commonButton";
 
 const HomeScreen = () => {
@@ -23,19 +23,19 @@ const HomeScreen = () => {
     const router = useRouter();
     const { user, logout } = useUser();
 
-    const [showOpenProblems, setShowOpenProblems] = useState(false);
-    const [showClosedProblems, setShowClosedProblems] = useState(false);
+    const [showOpenTopics, setShowOpenTopics] = useState(false);
+    const [showClosedTopics, setShowClosedTopics] = useState(false);
 
-    // generate the placeholder problems
-    var [openProblems, closedProblems] = generateProblems();
+    // generate the placeholder topics
+    var [openTopics, closedTopics] = generateTopics();
 
     const logoutClicked = () => {
         logout();
         router.replace("/login");
     };
 
-    const createNewProblem = () => {
-        router.push("/createProblem");
+    const createNewTopic = () => {
+        router.push("/createTopic");
     };
 
     return (
@@ -44,7 +44,7 @@ const HomeScreen = () => {
                 <Text className="text-2xl font-bold">
                     Welcome, {user?.name} !
                 </Text>
-                <TouchableOpacity onPress={createNewProblem}>
+                <TouchableOpacity onPress={createNewTopic}>
                     <Image
                         source={require("../assets/more.png")}
                         style={{ width: 30, height: 30 }}
@@ -56,15 +56,15 @@ const HomeScreen = () => {
             <View className="h-[80%]">
                 <TouchableOpacity
                     onPress={() => {
-                        setShowOpenProblems(!showOpenProblems);
+                        setShowOpenTopics(!showOpenTopics);
                     }}
                     className="bg-blue-500 p-4 rounded-lg mb-2"
                 >
                     <Text className="text-white text-lg font-bold">
-                        Open Problems
+                        Open Topics
                     </Text>
                 </TouchableOpacity>
-                <Collapsible collapsed={!showOpenProblems}>
+                <Collapsible collapsed={!showOpenTopics}>
                     <View
                         style={{
                             maxHeight: windowHeight * 0.3,
@@ -72,9 +72,9 @@ const HomeScreen = () => {
                         }}
                     >
                         <FlatList
-                            data={openProblems}
+                            data={openTopics}
                             renderItem={({ item }) => (
-                                <ProblemItem problem={item} />
+                                <TopicItem topic={item} />
                             )}
                             keyExtractor={(_, index) => index.toString()}
                             contentContainerStyle={{ padding: 8 }}
@@ -84,25 +84,25 @@ const HomeScreen = () => {
 
                 <TouchableOpacity
                     onPress={() => {
-                        setShowClosedProblems(!showClosedProblems);
+                        setShowClosedTopics(!showClosedTopics);
                     }}
                     className="bg-blue-500 p-4 rounded-lg mb-2"
                 >
                     <Text className="text-white text-lg font-bold">
-                        Closed Problems
+                        Closed Topics
                     </Text>
                 </TouchableOpacity>
-                <Collapsible collapsed={!showClosedProblems}>
+                <Collapsible collapsed={!showClosedTopics}>
                     <View
                         style={{
-                            maxHeight: windowHeight * (showOpenProblems ? 0.26 : 0.5),
+                            maxHeight: windowHeight * (showOpenTopics ? 0.26 : 0.5),
                             overflow: "hidden",
                         }}
                     >
                         <FlatList
-                            data={closedProblems}
+                            data={closedTopics}
                             renderItem={({ item }) => (
-                                <ProblemItem problem={item} />
+                                <TopicItem topic={item} />
                             )}
                             keyExtractor={(_, index) => index.toString()}
                             contentContainerStyle={{ padding: 8 }}

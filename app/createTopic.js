@@ -15,12 +15,12 @@ import CommonButton from "./components/commonButton";
 import AddListItem from "./components/addListItem";
 import Notification from "./components/notification";
 
-const CreateNewProblemScreen = () => {
-    console.log("Create Problem Page Rendered");
+const CreateNewTopicScreen = () => {
+    console.log("Create Topic Page Rendered");
 
     const router = useRouter();
 
-    const [problem, setProblem] = useState("");
+    const [topic, setTopic] = useState("");
     const [participant, setParticipant] = useState("");
     const [stakeholder, setStakeholder] = useState("");
     const [option, setOption] = useState("");
@@ -44,13 +44,13 @@ const CreateNewProblemScreen = () => {
         setListFunc(list.filter((i) => i !== item));
     };
 
-    // should save problem to the database
-    const saveProblem = () => {
+    // should save topic to the database
+    const saveTopic = () => {
         setNotificationVisible(true);
     };
 
     const clearInput = () => {
-        setProblem("");
+        setTopic("");
         setParticipant("");
         setParticipants([]);
         setStakeholder("");
@@ -59,7 +59,7 @@ const CreateNewProblemScreen = () => {
         setOptions([]);
     };
 
-    // content within the "Problem Created Popup"
+    // content within the "Topic Created Popup"
     const NotificationOptions = (
         <View>
             <View className="flex-row justify-center">
@@ -95,13 +95,13 @@ const CreateNewProblemScreen = () => {
                 automaticallyAdjustKeyboardInsets={true}
             >
                 <Text className="text-lg font-bold mb-3 mt-5">
-                    Describe the Problem
+                    Describe the Topic
                 </Text>
                 <TextInput
                     multiline={true}
-                    placeholder="Enter the problem description"
-                    value={problem}
-                    onChange={setProblem}
+                    placeholder="Enter the topic description"
+                    value={topic}
+                    onChange={setTopic}
                     className="border border-gray-400 p-3 rounded-lg mb-5"
                 />
 
@@ -162,7 +162,7 @@ const CreateNewProblemScreen = () => {
                 />
             </ScrollView>
 
-            <CommonButton title="Save" onPress={saveProblem} />
+            <CommonButton title="Save" onPress={saveTopic} />
             <Notification
                 visible={notificationVisible}
                 duration={10000}
@@ -174,4 +174,4 @@ const CreateNewProblemScreen = () => {
     );
 };
 
-export default CreateNewProblemScreen;
+export default CreateNewTopicScreen;

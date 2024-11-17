@@ -6,21 +6,20 @@ import "./global.css";
 const Layout = () => {
     return (
         <UserProvider>
-            {/* rename each screen */}
             <Stack>
                 <Stack.Screen name="home" options={{ title: "Home" }} />
                 <Stack.Screen name="login" options={{ title: "Log In" }} />
                 <Stack.Screen
-                    name="createProblem"
-                    options={{ title: "Create New Problem" }}
+                    name="createTopic"
+                    options={{ title: "Create New Topic" }}
                 />
                 <Stack.Screen
-                    name="openProblem"
-                    options={{ title: "Problem" }}
+                    name="openTopic"
+                    options={{ title: "Topic" }}
                 />
                 <Stack.Screen
-                    name="closedProblem"
-                    options={{ title: "Problem Closed" }}
+                    name="closedTopic"
+                    options={{ title: "Topic Closed" }}
                 />
             </Stack>
         </UserProvider>

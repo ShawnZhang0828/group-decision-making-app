@@ -2,54 +2,54 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 
-const ProblemItem = ({ problem }) => {
+const TopicItem = ({ topic }) => {
     const router = useRouter();
 
     const getCompletedNumber = () => {
-        return Array.from(problem.participants.values()).filter(
+        return Array.from(topic.participants.values()).filter(
             (completed) => completed
         ).length;
     };
 
-    const problemClicked = () => {
-        // stringify problem so that it is passed to future pages correctly
-        string_problem = JSON.stringify(problem);
-        if (problem.getProblemCompleted()) {
+    const topicClicked = () => {
+        // stringify topic so that it is passed to future pages correctly
+        string_topic = JSON.stringify(topic);
+        if (topic.getTopicCompleted()) {
             router.push({
-                pathname: "/closedProblem",
-                params: { string_problem },
+                pathname: "/closedTopic",
+                params: { string_topic },
             });
         } else {
             router.push({
-                pathname: "/openProblem",
-                params: { string_problem },
+                pathname: "/openTopic",
+                params: { string_topic },
             });
         }
     };
 
     return (
         <TouchableOpacity
-            onPress={problemClicked}
+            onPress={topicClicked}
             className="bg-gray-100 rounded-lg p-4 mb-2 shadow-md gap-2"
         >
             <Text className="text-lg font-semibold mb-1 leading-tight">
-                {problem.description}
+                {topic.description}
             </Text>
             <Text className="text-gray-600">
-                Created on: {problem.createdDate}
+                Created on: {topic.createdDate}
             </Text>
-            {problem.getProblemCompleted() ? (
+            {topic.getTopicCompleted() ? (
                 <Text className="text-gray-600">
-                    Decision: {problem.getFinalDecision().content}
+                    Decision: {topic.getFinalDecision().content}
                 </Text>
             ) : (
                 <Text className="text-gray-600">
                     Completed: {getCompletedNumber()} /{" "}
-                    {problem.participants.size}
+                    {topic.participants.size}
                 </Text>
             )}
         </TouchableOpacity>
     );
 };
 
-export default ProblemItem;
+export default TopicItem;

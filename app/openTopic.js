@@ -18,8 +18,8 @@ import { UserRole, convertRole } from "./models/userRole";
 import CommonButton from "./components/commonButton";
 import Notification from "./components/notification";
 
-const OpenProblem = () => {
-    console.log("Open Problems Page Rendered");
+const OpenTopic = () => {
+    console.log("Open Topics Page Rendered");
 
     const { user } = useUser();
 
@@ -30,32 +30,32 @@ const OpenProblem = () => {
 
     const router = useRouter();
 
-    // accept the problem from route parameters
-    const { string_problem } = useLocalSearchParams();
-    // reconstruct the problem object
-    const problem = JSON.parse(string_problem);
+    // accept the topic from route parameters
+    const { string_topic } = useLocalSearchParams();
+    // reconstruct the topic object
+    const topic = JSON.parse(string_topic);
 
     // get all participants and determine the role
-    const participants = Array.from(problem.participants).map((item) => item.participant);
+    const participants = Array.from(topic.participants).map((item) => item.participant);
     var role;
     if (participants.includes(user.name)) {
         role = UserRole.PARTICIPANT;
     } else if (user.name === "Patient Giraffe") {
         role = UserRole.STAKEHOLDER;
-    } else if (user.name === problem.creator) {
+    } else if (user.name === topic.creator) {
         role = UserRole.CREATOR;
     }
 
     var completed = false;
     if (role == UserRole.PARTICIPANT) {
-        completed = problem.participants.find(
+        completed = topic.participants.find(
             (participant) => participant.participant === user.name
         ).completed;
     }
     const viewOnly = completed || role == UserRole.CREATOR || role == UserRole.STAKEHOLDER;
 
     // construct option data for the option list
-    const optionsData = problem.options.map((option) => {
+    const optionsData = topic.options.map((option) => {
         return {
             id: option.id,
             content: option.content,
@@ -133,13 +133,13 @@ const OpenProblem = () => {
         <KeyboardAvoidingView className="p-4 h-full" behavior={Platform.OS === "ios" ? "padding" : "height"}>
             <View className="mb-4">
                 <Text className="font-bold text-xl">Topic</Text>
-                <Text className="font-lg">{problem.description}</Text>
+                <Text className="font-lg">{topic.description}</Text>
             </View>
 
             <View className="flex-row justify-between border-b-2 pb-2 mb-2">
                 <View>
                     <Text className="font-bold text-lg">Created by</Text>
-                    <Text className="font-lg">{problem.creator}</Text>
+                    <Text className="font-lg">{topic.creator}</Text>
                 </View>
                 <View>
                     <Text className="font-bold text-lg">Viewing as</Text>
@@ -170,7 +170,7 @@ const OpenProblem = () => {
                     {selectedID !== null && (
                         <View>
                             <Text className="font-bold text-lg mb-3">
-                                {problem.options[selectedID].content}
+                                {topic.options[selectedID].content}
                             </Text>
                             <View className="flex-row justify-start mb-2">
                                 <TouchableOpacity
@@ -244,4 +244,4 @@ const OpenProblem = () => {
     );
 };
 
-export default OpenProblem;
+export default OpenTopic;

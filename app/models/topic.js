@@ -2,7 +2,7 @@ import Option from "./option";
 import Response from "./response";
 import randomString from "../utils/randomGenerator";
 
-class Problem {
+class Topic {
     constructor(creator, description) {
         this.creator = creator;
         this.description = description;
@@ -97,7 +97,7 @@ class Problem {
     }
 
     // get a bool that tells if the decision has been made
-    getProblemCompleted() {
+    getTopicCompleted() {
         return Array.from(this.participants.values()).every((value) => value);
     }
 
@@ -112,7 +112,7 @@ class Problem {
         return today;
     }
 
-    // used by JSON.stringify - convert Problem object to a JSON string properly
+    // used by JSON.stringify - convert Topic object to a JSON string properly
     toJSON() {
         return {
             creator: this.creator,
@@ -126,4 +126,4 @@ class Problem {
 
 }
 
-export default Problem;
+export default Topic;
