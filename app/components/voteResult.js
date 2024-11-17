@@ -8,7 +8,7 @@ const VoteResult = ({ selectedIndex, setSelectedIndex, topic, maxVoters, finalDe
 
     // screen configuration for the bar chart
     const chartConfig = {
-        chartYSections: maxVoters + (maxVoters >= 3 ? 2 : 1),
+        chartYSections: maxVoters + (maxVoters - 1),
         barWidth: 35,
         width: screenWidth * 0.9,
         spacing:

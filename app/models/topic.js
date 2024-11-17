@@ -85,7 +85,9 @@ class Topic {
 
     // generate final decision
     generateFinalDecision() {
-        this.finalDecision = this.options[Math.floor(Math.random() * this.options.length)];
+        const maxVoters = Math.max(...this.options.map(option => option.voters.length));
+        const topOptions = this.options.filter(option => option.voters.length === maxVoters);
+        this.finalDecision = topOptions[Math.floor(Math.random() * topOptions.length)];
     }
 
     // get a bool that tells if the decision has been made
