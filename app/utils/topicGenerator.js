@@ -21,8 +21,7 @@ const generateTopics = () => {
         "The Seafood Shack",
         "Mexican Fiesta",
     ]);
-    topic1.completeWithRandomResponses("Cheerful Otter");
-    topic1.completeWithRandomResponses("Lazy Koala");
+    topic1.completeAllWithRandomResponses();
     topic1.generatePros();
     topic1.generateCons();
     // Topic 2
@@ -63,6 +62,7 @@ const generateTopics = () => {
     topic3.completeAllWithRandomResponses();
     topic3.generatePros();
     topic3.generateCons();
+    topic3.generateFinalDecision();
     // Topic 4
     const topic4 = new Topic(
         "Gentle Tiger",
@@ -73,6 +73,7 @@ const generateTopics = () => {
     topic4.completeAllWithRandomResponses();
     topic4.generatePros();
     topic4.generateCons();
+    topic4.generateFinalDecision();
     // Topic 5
     const topic5 = new Topic(
         "Happy Dolphin",
@@ -96,6 +97,7 @@ const generateTopics = () => {
     topic5.completeAllWithRandomResponses();
     topic5.generatePros();
     topic5.generateCons();
+    topic5.generateFinalDecision();
 
     const openTopics = [topic1, topic2];
     const closedTopics = [topic3, topic4, topic5];

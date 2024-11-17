@@ -11,6 +11,8 @@ class Topic {
         this.options = [];
         this.participants = new Map();
         this.responses = new Map();
+
+        this.finalDecision = null;
     }
 
     addParticipant(participant) {
@@ -39,17 +41,11 @@ class Topic {
     // generate a random response from a participant
     completeWithRandomResponses(name) {
         this.participants.set(name, true);
+
         const randomOption = Math.floor(Math.random() * this.options.length);
         const option = this.options[randomOption];
+        this.responses.set(name, new Response(name, option));
 
-        this.responses.set(
-            name,
-            new Response(
-                name,
-                option,
-                "This is a placeholder for the rationale of this decision. The author of this response should specify the pros and cons for this decision."
-            )
-        );
         option.voters.push(name);
     }
 
@@ -61,8 +57,8 @@ class Topic {
 
     // generate random pros and cons
     generatePros() {
-        this.options.forEach(option => {
-            Array.from(this.participants.keys()).forEach(participant => {
+        this.options.forEach((option) => {
+            Array.from(this.participants.keys()).forEach((participant) => {
                 // each participant has 40% of filling in the pro for an option
                 const hasPro = Math.random() < 0.4;
                 if (hasPro) {
@@ -74,12 +70,12 @@ class Topic {
         });
     }
     generateCons() {
-        this.options.forEach(option => {
-            Array.from(this.participants.keys()).forEach(participant => {
+        this.options.forEach((option) => {
+            Array.from(this.participants.keys()).forEach((participant) => {
                 // each participant has 40% of filling in the con for an option
                 const hasCon = Math.random() < 0.4;
                 if (hasCon) {
-                    const length = Math.floor(Math.random()*30) + 20;
+                    const length = Math.floor(Math.random() * 30) + 20;
                     const con = randomString(length);
                     option.cons.set(participant, con);
                 }
@@ -87,18 +83,14 @@ class Topic {
         });
     }
 
-    // get the decision with the largest number of votes
-    getFinalDecision() {
-        return this.options.reduce(
-            (max, option) =>
-                option.voters.length > max.voters.length ? option : max,
-            this.options[0]
-        );
+    // generate final decision
+    generateFinalDecision() {
+        this.finalDecision = this.options[Math.floor(Math.random() * this.options.length)];
     }
 
     // get a bool that tells if the decision has been made
     getTopicCompleted() {
-        return Array.from(this.participants.values()).every((value) => value);
+        return this.finalDecision;
     }
 
     getCurrentDate() {
@@ -119,11 +111,15 @@ class Topic {
             description: this.description,
             createdDate: this.createdDate,
             options: this.options,
-            participants: Array.from(this.participants).map(([participant, completed]) => ({participant, completed})),
-            responses: Array.from(this.responses).map(([_, response]) => response),    
+            participants: Array.from(this.participants).map(
+                ([participant, completed]) => ({ participant, completed })
+            ),
+            responses: Array.from(this.responses).map(
+                ([_, response]) => response
+            ),
+            finalDecision: this.finalDecision
         };
     }
-
 }
 
 export default Topic;

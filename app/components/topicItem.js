@@ -40,7 +40,7 @@ const TopicItem = ({ topic }) => {
             </Text>
             {topic.getTopicCompleted() ? (
                 <Text className="text-gray-600">
-                    Decision: {topic.getFinalDecision().content}
+                    Decision: {topic.finalDecision.content}
                 </Text>
             ) : (
                 <Text className="text-gray-600">

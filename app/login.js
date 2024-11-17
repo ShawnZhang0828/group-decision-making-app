@@ -14,6 +14,7 @@ import { useFonts } from "expo-font";
 
 import authService from "./services/authService";
 import { useUser } from "./contexts/userContext";
+import CommonButton from "./components/commonButton";
 
 const LoginScreen = () => {
     console.log("Login Page Rendered");
@@ -66,7 +67,7 @@ const LoginScreen = () => {
                         onChangeText={setPassword}
                         className="border border-gray-400 rounded-lg p-3 w-3/4 mb-4 bg-white"
                     />
-                    <Button title="Login" onPress={loginClicked} />
+                    <CommonButton title="Login" onPress={loginClicked} atBottom={false} />
                 </View>
             </ScrollView>
         </KeyboardAvoidingView>

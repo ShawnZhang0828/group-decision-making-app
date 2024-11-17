@@ -15,6 +15,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { useUser } from "./contexts/userContext";
 import { UserRole, convertRole } from "./models/userRole";
+import VoteResult from "./components/voteResult";
 import CommonButton from "./components/commonButton";
 import Notification from "./components/notification";
 
@@ -23,6 +24,9 @@ const OpenTopic = () => {
 
     const { user } = useUser();
 
+    // for view only (chart, pros/cons)
+    const [selectedIndex, setSelectedIndex] = useState(null);
+    // for editing (select an option)
     const [selectedID, setSelectedID] = useState(null);
     const [showNotification, setShowNotification] = useState(false);
     const [activeTab, setActiveTab] = useState("pros");
@@ -36,7 +40,9 @@ const OpenTopic = () => {
     const topic = JSON.parse(string_topic);
 
     // get all participants and determine the role
-    const participants = Array.from(topic.participants).map((item) => item.participant);
+    const participants = Array.from(topic.participants).map(
+        (item) => item.participant
+    );
     var role;
     if (participants.includes(user.name)) {
         role = UserRole.PARTICIPANT;
@@ -46,13 +52,37 @@ const OpenTopic = () => {
         role = UserRole.CREATOR;
     }
 
+    // check if all participants have made a decision
+    // if so, the creator can make a final decision
+    const numParticipated = topic.participants.filter(
+        (participant) => participant.completed
+    ).length;
+    const allParticipated = numParticipated === participants.length;
+
+    // if the current user is a participant and they have made a decision
     var completed = false;
     if (role == UserRole.PARTICIPANT) {
         completed = topic.participants.find(
             (participant) => participant.participant === user.name
         ).completed;
     }
-    const viewOnly = completed || role == UserRole.CREATOR || role == UserRole.STAKEHOLDER;
+    const viewOnly =
+        completed || role == UserRole.CREATOR || role == UserRole.STAKEHOLDER;
+
+    var selectedOption = null;
+    // if completed, get selected option
+    if (completed) {
+        selectedOption = topic.responses.find(
+            (response) => response?.author == user.name
+        )?.selectedOption?.content;
+    }
+
+    // get the maximum number of votes among all options
+    const maxVoters = topic.options.reduce(
+        (max, option) =>
+            option.voters.length > max.voters.length ? option : max,
+        topic.options[0]
+    ).voters.length;
 
     // construct option data for the option list
     const optionsData = topic.options.map((option) => {
@@ -86,9 +116,15 @@ const OpenTopic = () => {
         };
 
         return (
-            <TouchableOpacity className="border-2 border-indigo-950 rounded-lg mb-2" onPress={handleClick}>
+            <TouchableOpacity
+                className="border-2 border-indigo-950 rounded-lg mb-2"
+                onPress={handleClick}
+            >
                 <View className="flex-row items-center justify-between">
-                    <View className="w-[87%] pl-2 rounded-md" style={{ backgroundColor: backgroundColor }}>
+                    <View
+                        className="w-[87%] pl-2 rounded-md"
+                        style={{ backgroundColor: backgroundColor }}
+                    >
                         <Text>{item.content}</Text>
                     </View>
 
@@ -97,10 +133,20 @@ const OpenTopic = () => {
                         style={{ flex: 1, paddingRight: 3 }}
                     >
                         {feedback[item.id]?.pros && (
-                            <Icon name="thumb-up" size={16} color="green" style={{ marginLeft: 5 }} />
+                            <Icon
+                                name="thumb-up"
+                                size={16}
+                                color="green"
+                                style={{ marginLeft: 5 }}
+                            />
                         )}
                         {feedback[item.id]?.cons && (
-                            <Icon name="thumb-down" size={16} color="#b5002a" style={{ marginLeft: 5 }} />
+                            <Icon
+                                name="thumb-down"
+                                size={16}
+                                color="#b5002a"
+                                style={{ marginLeft: 5 }}
+                            />
                         )}
                     </View>
                 </View>
@@ -130,7 +176,10 @@ const OpenTopic = () => {
     );
 
     return (
-        <KeyboardAvoidingView className="p-4 h-full" behavior={Platform.OS === "ios" ? "padding" : "height"}>
+        <KeyboardAvoidingView
+            className="p-4 h-full"
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
             <View className="mb-4">
                 <Text className="font-bold text-xl">Topic</Text>
                 <Text className="font-lg">{topic.description}</Text>
@@ -148,7 +197,79 @@ const OpenTopic = () => {
             </View>
 
             {viewOnly ? (
-                <View></View>
+                <View className="h-[78%]">
+                    {completed && (
+                        <View className="p-2 bg-gray-100 rounded-md shadow mb-4">
+                            <Text className="text-lg font-semibold text-gray-800 mb-2 text-center">
+                                You have made your decision:
+                                <Text className="font-bold text-blue-600">
+                                    {" "}
+                                    {selectedOption}
+                                </Text>
+                                .
+                            </Text>
+                            <Text className="text-sm text-gray-600 text-center">
+                                This topic is view-only.
+                            </Text>
+                        </View>
+                    )}
+                    {role === UserRole.CREATOR && (
+                        <View className="p-2 bg-gray-100 rounded-md shadow mb-4">
+                            {allParticipated ? (
+                                <View>
+                                    <Text
+                                        className="text-md
+                                        text-gray-800
+                                        text-center font-semibold"
+                                    >
+                                        All participants have made their
+                                        decisions.
+                                    </Text>
+                                    <Text
+                                        className="text-md
+                                        text-gray-800
+                                        mb-2
+                                        text-center font-semibold"
+                                    >
+                                        Please make a final decision.
+                                    </Text>
+                                    <TouchableOpacity
+                                        onPress={() => {}}
+                                        className="bg-blue-500 p-3 rounded-md self-center shadow"
+                                    >
+                                        <Text className="text-white font-bold text-center">
+                                            Decide
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            ) : (
+                                <View>
+                                    {/* Creator Information */}
+                                    <Text className="text-lg font-bold text-gray-800 text-center mb-1">
+                                        You are the creator of this topic.
+                                    </Text>
+
+                                    {/* Voting Progress */}
+                                    <Text className="text-md font-semibold text-blue-600 text-center mb-2">
+                                        Voting Progress: {numParticipated} /{" "}
+                                        {participants.length}
+                                    </Text>
+
+                                    {/* View-Only Notice */}
+                                    <Text className="text-sm text-gray-600 text-center">
+                                        This topic is view-only.
+                                    </Text>
+                                </View>
+                            )}
+                        </View>
+                    )}
+                    <VoteResult
+                        selectedIndex={selectedIndex}
+                        setSelectedIndex={setSelectedIndex}
+                        topic={topic}
+                        maxVoters={maxVoters}
+                    />
+                </View>
             ) : (
                 <ScrollView
                     contentContainerStyle={{ paddingBottom: 30 }}
@@ -177,11 +298,20 @@ const OpenTopic = () => {
                                     onPress={() => setActiveTab("pros")}
                                     className={`p-2 rounded-lg`}
                                     style={{
-                                        backgroundColor: activeTab === "pros" ? "#3376b0" : "#e2e8f0",
+                                        backgroundColor:
+                                            activeTab === "pros"
+                                                ? "#3376b0"
+                                                : "#e2e8f0",
                                         marginRight: 10,
                                     }}
                                 >
-                                    <Text className={activeTab === "pros" ? "text-white" : "text-black"}>
+                                    <Text
+                                        className={
+                                            activeTab === "pros"
+                                                ? "text-white"
+                                                : "text-black"
+                                        }
+                                    >
                                         Pros
                                     </Text>
                                 </TouchableOpacity>
@@ -189,10 +319,19 @@ const OpenTopic = () => {
                                     onPress={() => setActiveTab("cons")}
                                     className={`p-2 rounded-lg`}
                                     style={{
-                                        backgroundColor: activeTab === "cons" ? "#3376b0" : "#e2e8f0",
+                                        backgroundColor:
+                                            activeTab === "cons"
+                                                ? "#3376b0"
+                                                : "#e2e8f0",
                                     }}
                                 >
-                                    <Text className={activeTab === "cons" ? "text-white" : "text-black"}>
+                                    <Text
+                                        className={
+                                            activeTab === "cons"
+                                                ? "text-white"
+                                                : "text-black"
+                                        }
+                                    >
                                         Cons
                                     </Text>
                                 </TouchableOpacity>
@@ -203,7 +342,9 @@ const OpenTopic = () => {
                                     placeholder="Add pros for this option"
                                     multiline
                                     value={currentFeedback.pros}
-                                    onChangeText={(text) => updateFeedback("pros", text)}
+                                    onChangeText={(text) =>
+                                        updateFeedback("pros", text)
+                                    }
                                     className="border border-gray-400 rounded-lg p-3 mb-4 bg-white"
                                     style={{ height: 100 }}
                                 />
@@ -212,7 +353,9 @@ const OpenTopic = () => {
                                     placeholder="Add cons for this option"
                                     multiline
                                     value={currentFeedback.cons}
-                                    onChangeText={(text) => updateFeedback("cons", text)}
+                                    onChangeText={(text) =>
+                                        updateFeedback("cons", text)
+                                    }
                                     className="border border-gray-400 rounded-lg p-3 mb-4 bg-white"
                                     style={{ height: 100 }}
                                 />
@@ -222,16 +365,21 @@ const OpenTopic = () => {
                 </ScrollView>
             )}
 
-            <CommonButton
-                title="Submit"
-                onPress={() => {
-                    if (selectedID === null) {
-                        Alert.alert("Cannot Submit", "Please select an option first.");
-                    } else {
-                        setShowNotification(true);
-                    }
-                }}
-            />
+            {!viewOnly && (
+                <CommonButton
+                    title="Submit"
+                    onPress={() => {
+                        if (selectedID === null) {
+                            Alert.alert(
+                                "Cannot Submit",
+                                "Please select an option first."
+                            );
+                        } else {
+                            setShowNotification(true);
+                        }
+                    }}
+                />
+            )}
 
             <Notification
                 visible={showNotification}

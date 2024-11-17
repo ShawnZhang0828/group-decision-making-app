@@ -1,9 +1,9 @@
 import React from "react";
 import { View, TouchableOpacity, Text } from "react-native";
 
-const CommonButton = ({ title, onPress }) => {
+const CommonButton = ({ title, onPress, atBottom=true }) => {
     return (
-        <View className="absolute bottom-10 left-0 right-0 items-center">
+        <View className={`${atBottom ? "absolute bottom-10 left-0 right-0" : ""} items-center`}>
             <View className="w-[50%]">
                 <TouchableOpacity
                     onPress={onPress}
