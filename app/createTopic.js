@@ -13,7 +13,7 @@ import { useRouter } from "expo-router";
 
 import CommonButton from "./components/commonButton";
 import AddListItem from "./components/addListItem";
-import Notification from "./components/notification";
+import CustomizeModal from "./components/customizeModal";
 
 const CreateNewTopicScreen = () => {
     console.log("Create Topic Page Rendered");
@@ -163,7 +163,7 @@ const CreateNewTopicScreen = () => {
             </ScrollView>
 
             <CommonButton title="Save" onPress={saveTopic} />
-            <Notification
+            <CustomizeModal
                 visible={notificationVisible}
                 duration={10000}
                 message="Item Saved !"

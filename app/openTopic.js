@@ -17,7 +17,7 @@ import { useUser } from "./contexts/userContext";
 import { UserRole, convertRole } from "./models/userRole";
 import VoteResult from "./components/voteResult";
 import CommonButton from "./components/commonButton";
-import Notification from "./components/notification";
+import CustomizeModal from "./components/customizeModal";
 
 const OpenTopic = () => {
     console.log("Open Topics Page Rendered");
@@ -28,9 +28,11 @@ const OpenTopic = () => {
     const [selectedIndex, setSelectedIndex] = useState(null);
     // for editing (select an option)
     const [selectedID, setSelectedID] = useState(null);
-    const [showNotification, setShowNotification] = useState(false);
     const [activeTab, setActiveTab] = useState("pros");
     const [feedback, setFeedback] = useState({});
+
+    const [showNotification, setShowNotification] = useState(false);
+    const [showMakeDecisionPopup, setShowMakeDecisionPopup] = useState(false);
 
     const router = useRouter();
 
@@ -66,7 +68,7 @@ const OpenTopic = () => {
             (participant) => participant.participant === user.name
         ).completed;
     }
-    const viewOnly =
+    var viewOnly =
         completed || role == UserRole.CREATOR || role == UserRole.STAKEHOLDER;
 
     var selectedOption = null;
@@ -162,16 +164,64 @@ const OpenTopic = () => {
                     setShowNotification(false);
                 }}
             >
-                <Text className="border-2 rounded-md p-2 mr-5">Edit</Text>
+                <Text className="border-2 rounded-md p-2 mr-5 bg-red-300">No</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => {
                     setShowNotification(false);
-                    router.replace("/home");
+                    
+                    // navigate back to the home screen after a short delay 
+                    // to ensure the make decision popup is properly dismissed
+                    setTimeout(() => {
+                        setShowMakeDecisionPopup(false);
+                        router.replace("/home");
+                    }, 100); 
                 }}
             >
-                <Text className="border-2 rounded-md p-2">Leave</Text>
+                <Text className="border-2 rounded-md p-2 bg-green-200">Yes</Text>
             </TouchableOpacity>
+        </View>
+    );
+
+    // final decision popup content
+    const decisionPopupContent = (
+        <View className="flex-column justify-center">
+            <View className="max-h-52">
+                <FlatList
+                    data={optionsData}
+                    renderItem={renderOption}
+                    extraData={selectedID}
+                    keyExtractor={(option) => option.id.toString()}
+                    scrollEnabled={false}
+                />
+            </View>
+            <View className="flex-row justify-between mx-[20%]">
+                <TouchableOpacity
+                    onPress={() => {
+                        setShowMakeDecisionPopup(false);
+                    }}
+                >
+                    <Text className="border-2 rounded-md p-2 mr-5 bg-red-300">
+                        Cancel
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => {
+                        if (selectedID === null) {
+                            Alert.alert(
+                                "Cannot Submit",
+                                "Please select an option first."
+                            );
+                        } else {
+                            setShowNotification(true);
+                        }
+                    }}
+                >
+                    <Text className="border-2 rounded-md p-2 mr-5 bg-green-200">
+                        Submit
+                    </Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 
@@ -234,7 +284,9 @@ const OpenTopic = () => {
                                         Please make a final decision.
                                     </Text>
                                     <TouchableOpacity
-                                        onPress={() => {}}
+                                        onPress={() => {
+                                            setShowMakeDecisionPopup(true);
+                                        }}
                                         className="bg-blue-500 p-3 rounded-md self-center shadow"
                                     >
                                         <Text className="text-white font-bold text-center">
@@ -244,18 +296,15 @@ const OpenTopic = () => {
                                 </View>
                             ) : (
                                 <View>
-                                    {/* Creator Information */}
                                     <Text className="text-lg font-bold text-gray-800 text-center mb-1">
                                         You are the creator of this topic.
                                     </Text>
 
-                                    {/* Voting Progress */}
                                     <Text className="text-md font-semibold text-blue-600 text-center mb-2">
                                         Voting Progress: {numParticipated} /{" "}
                                         {participants.length}
                                     </Text>
 
-                                    {/* View-Only Notice */}
                                     <Text className="text-sm text-gray-600 text-center">
                                         This topic is view-only.
                                     </Text>
@@ -381,12 +430,20 @@ const OpenTopic = () => {
                 />
             )}
 
-            <Notification
+            <CustomizeModal
                 visible={showNotification}
                 duration={5000}
-                message="Changes successfully saved !"
+                message="You can't edit your response after leaving. Are you sure?"
                 children={notificationContent}
-                onHide={() => {}}
+                onHide={() => {setShowNotification(false)}}
+            />
+
+            <CustomizeModal
+                visible={showMakeDecisionPopup}
+                duration={1000000}
+                message="Make a Final Decision"
+                children={decisionPopupContent}
+                onHide={() => {setShowMakeDecisionPopup(false)}}
             />
         </KeyboardAvoidingView>
     );

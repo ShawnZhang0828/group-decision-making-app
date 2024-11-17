@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Animated, Modal } from "react-native";
 
-const Notification = ({ visible, duration, message, children, onHide }) => {
+const CustomizeModal = ({ visible, duration, message, children, onHide }) => {
     const [slideAnimation] = useState(new Animated.Value(150));
 
     useEffect(() => {
@@ -39,7 +39,7 @@ const Notification = ({ visible, duration, message, children, onHide }) => {
             }}
         >
             <View className="bg-slate-400/80 flex-1 justify-center items-center">
-                <View className="bg-indigo-100 py-6 px-8 rounded-lg w-fit max-w-lg items-center">
+                <View className="bg-indigo-100 py-6 px-6 rounded-lg w-fit max-w-lg items-center">
                     <Text className="text-blue-950 text-center mb-4 font-bold text-lg">
                         {message}
                     </Text>
@@ -50,4 +50,4 @@ const Notification = ({ visible, duration, message, children, onHide }) => {
     );
 };
 
-export default Notification;
+export default CustomizeModal;
