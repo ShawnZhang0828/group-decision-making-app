@@ -46,7 +46,15 @@ const CreateNewTopicScreen = () => {
 
     // should save topic to the database
     const saveTopic = () => {
-        setNotificationVisible(true);
+        if (!topic) {
+            Alert.alert("Error", "Please describe the topic.");
+        } else if (!participants) {
+            Alert.alert("Error", "Please add at least one participant.");
+        } else if (!options) {
+            Alert.alert("Error", "Please add at least one option.");
+        } else {
+            setNotificationVisible(true);
+        }
     };
 
     const clearInput = () => {
@@ -60,26 +68,28 @@ const CreateNewTopicScreen = () => {
     };
 
     // content within the "Topic Created Popup"
-    const NotificationOptions = (
+    const notificationOptions = (
         <View>
             <View className="flex-row justify-center">
-                <TouchableOpacity
-                    onPress={() => {
-                        clearInput();
-                        setNotificationVisible(false);
-                    }}
-                >
-                    <Text className="border-2 rounded-md p-2 mr-5">
-                        Add more
-                    </Text>
-                </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => {
                         setNotificationVisible(false);
                         router.replace("/home");
                     }}
                 >
-                    <Text className="border-2 rounded-md p-2">Go Back</Text>
+                    <Text className="border-2 rounded-md p-2 mr-5 bg-red-300">
+                        Leave
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => {
+                        clearInput();
+                        setNotificationVisible(false);
+                    }}
+                >
+                    <Text className="border-2 rounded-md p-2 bg-green-200">
+                        Add more
+                    </Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -98,7 +108,7 @@ const CreateNewTopicScreen = () => {
                     Describe the Topic
                 </Text>
                 <TextInput
-                    multiline={true}
+                    multiline
                     placeholder="Enter the topic description"
                     value={topic}
                     onChange={setTopic}
@@ -167,7 +177,7 @@ const CreateNewTopicScreen = () => {
                 visible={notificationVisible}
                 duration={10000}
                 message="Item Saved !"
-                children={NotificationOptions}
+                children={notificationOptions}
                 onHide={() => setNotificationVisible(false)}
             />
         </KeyboardAvoidingView>

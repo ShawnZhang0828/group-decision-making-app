@@ -39,7 +39,7 @@ const CustomizeModal = ({ visible, duration, message, children, onHide }) => {
             }}
         >
             <View className="bg-slate-400/80 flex-1 justify-center items-center">
-                <View className="bg-indigo-100 py-6 px-6 rounded-lg w-fit max-w-lg items-center">
+                <View className="bg-indigo-100 py-6 px-6 rounded-lg w-fit items-center max-w-[95%]">
                     <Text className="text-blue-950 text-center mb-4 font-bold text-lg">
                         {message}
                     </Text>

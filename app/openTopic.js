@@ -31,6 +31,8 @@ const OpenTopic = () => {
     const [activeTab, setActiveTab] = useState("pros");
     const [feedback, setFeedback] = useState({});
 
+    const [finalRationale, setFinalRationale] = useState("");
+
     const [showNotification, setShowNotification] = useState(false);
     const [showMakeDecisionPopup, setShowMakeDecisionPopup] = useState(false);
 
@@ -164,21 +166,25 @@ const OpenTopic = () => {
                     setShowNotification(false);
                 }}
             >
-                <Text className="border-2 rounded-md p-2 mr-5 bg-red-300">No</Text>
+                <Text className="border-2 rounded-md p-2 mr-5 bg-red-300">
+                    No
+                </Text>
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => {
                     setShowNotification(false);
-                    
-                    // navigate back to the home screen after a short delay 
+
+                    // navigate back to the home screen after a short delay
                     // to ensure the make decision popup is properly dismissed
                     setTimeout(() => {
                         setShowMakeDecisionPopup(false);
                         router.replace("/home");
-                    }, 100); 
+                    }, 100);
                 }}
             >
-                <Text className="border-2 rounded-md p-2 bg-green-200">Yes</Text>
+                <Text className="border-2 rounded-md p-2 bg-green-200">
+                    Yes
+                </Text>
             </TouchableOpacity>
         </View>
     );
@@ -186,13 +192,24 @@ const OpenTopic = () => {
     // final decision popup content
     const decisionPopupContent = (
         <View className="flex-column justify-center">
-            <View className="max-h-52">
+            <View className="max-h-48 mb-2">
                 <FlatList
                     data={optionsData}
                     renderItem={renderOption}
                     extraData={selectedID}
                     keyExtractor={(option) => option.id.toString()}
                     scrollEnabled={false}
+                />
+            </View>
+            <View className="mb-2">
+                <Text className="font-bold text-lg pb-2">Rationale</Text>
+                <TextInput
+                    placeholder="Please describe the rationale for your final decision."
+                    multiline
+                    value={finalRationale}
+                    onChangeText={setFinalRationale}
+                    className="border border-gray-400 rounded-lg p-3 mb-4 bg-white"
+                    style={{ height: 100 }}
                 />
             </View>
             <View className="flex-row justify-between mx-[20%]">
@@ -211,6 +228,11 @@ const OpenTopic = () => {
                             Alert.alert(
                                 "Cannot Submit",
                                 "Please select an option first."
+                            );
+                        } else if (!finalRationale) {
+                            Alert.alert(
+                                "Cannot Submit",
+                                "Please enter your rationale for the final decision."
                             );
                         } else {
                             setShowNotification(true);
@@ -435,7 +457,9 @@ const OpenTopic = () => {
                 duration={5000}
                 message="You can't edit your response after leaving. Are you sure?"
                 children={notificationContent}
-                onHide={() => {setShowNotification(false)}}
+                onHide={() => {
+                    setShowNotification(false);
+                }}
             />
 
             <CustomizeModal
@@ -443,7 +467,9 @@ const OpenTopic = () => {
                 duration={1000000}
                 message="Make a Final Decision"
                 children={decisionPopupContent}
-                onHide={() => {setShowMakeDecisionPopup(false)}}
+                onHide={() => {
+                    setShowMakeDecisionPopup(false);
+                }}
             />
         </KeyboardAvoidingView>
     );

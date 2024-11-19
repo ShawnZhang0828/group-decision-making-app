@@ -13,6 +13,7 @@ class Topic {
         this.responses = new Map();
 
         this.finalDecision = null;
+        this.finalDecisionRationale = "";
     }
 
     addParticipant(participant) {
@@ -88,6 +89,8 @@ class Topic {
         const maxVoters = Math.max(...this.options.map(option => option.voters.length));
         const topOptions = this.options.filter(option => option.voters.length === maxVoters);
         this.finalDecision = topOptions[Math.floor(Math.random() * topOptions.length)];
+
+        this.finalDecisionRationale = "This is a placeholder for the final rationale. Topic creators should use this field to explain why the final decision is made based on participants's responses. ";
     }
 
     // get a bool that tells if the decision has been made
@@ -119,7 +122,8 @@ class Topic {
             responses: Array.from(this.responses).map(
                 ([_, response]) => response
             ),
-            finalDecision: this.finalDecision
+            finalDecision: this.finalDecision,
+            finalDecisionRationale: this.finalDecisionRationale
         };
     }
 }
