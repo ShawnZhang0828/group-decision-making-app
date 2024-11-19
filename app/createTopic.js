@@ -9,6 +9,7 @@ import {
     ScrollView,
     Platform,
 } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
 
 import CommonButton from "./components/commonButton";
@@ -29,6 +30,18 @@ const CreateNewTopicScreen = () => {
     const [options, setOptions] = useState([]);
     const [notificationVisible, setNotificationVisible] = useState(false);
 
+    const [selectedTime, setSelectedTime] = useState(new Date());
+    const [showTimePicker, setShowTimePicker] = useState(false);
+
+    const handleTimeChange = (event, selectedDate) => {
+        if (event.type === "set") {
+            // 'set' means the user selected a time
+            const currentTime = selectedDate || new Date();
+            setSelectedTime(currentTime);
+        }
+        setShowTimePicker(false); // Hide the picker after selecting
+    };
+
     // add a new item to one of participants, stakeholders, or options
     const addItemClicked = (item, setItemFunc, list, setListFunc) => {
         if (item) {
@@ -48,23 +61,13 @@ const CreateNewTopicScreen = () => {
     const saveTopic = () => {
         if (!topic) {
             Alert.alert("Error", "Please describe the topic.");
-        } else if (!participants) {
+        } else if (participants.length == 0) {
             Alert.alert("Error", "Please add at least one participant.");
-        } else if (!options) {
+        } else if (options.length == 0) {
             Alert.alert("Error", "Please add at least one option.");
         } else {
             setNotificationVisible(true);
         }
-    };
-
-    const clearInput = () => {
-        setTopic("");
-        setParticipant("");
-        setParticipants([]);
-        setStakeholder("");
-        setStakeholders([]);
-        setOption("");
-        setOptions([]);
     };
 
     // content within the "Topic Created Popup"
@@ -83,12 +86,11 @@ const CreateNewTopicScreen = () => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => {
-                        clearInput();
                         setNotificationVisible(false);
                     }}
                 >
                     <Text className="border-2 rounded-md p-2 bg-green-200">
-                        Add more
+                        Edit
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -169,6 +171,18 @@ const CreateNewTopicScreen = () => {
                     removeItem={(item) => {
                         removeItemClicked(item, options, setOptions);
                     }}
+                />
+
+                <Text className="text-lg font-bold mb-3">
+                    Select a Due Date
+                </Text>
+                <DateTimePicker
+                    visible={showTimePicker}
+                    value={selectedTime}
+                    mode="date"
+                    is24Hour={false}
+                    display="default"
+                    onChange={handleTimeChange}
                 />
             </ScrollView>
 

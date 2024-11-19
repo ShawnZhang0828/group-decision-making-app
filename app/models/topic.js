@@ -7,6 +7,7 @@ class Topic {
         this.creator = creator;
         this.description = description;
         this.createdDate = this.getCurrentDate();
+        this.dueDate = "01/13/2025";
 
         this.options = [];
         this.participants = new Map();
@@ -115,6 +116,7 @@ class Topic {
             creator: this.creator,
             description: this.description,
             createdDate: this.createdDate,
+            dueDate: this.dueDate,
             options: this.options,
             participants: Array.from(this.participants).map(
                 ([participant, completed]) => ({ participant, completed })

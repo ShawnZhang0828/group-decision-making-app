@@ -35,9 +35,17 @@ const TopicItem = ({ topic }) => {
             <Text className="text-lg font-semibold mb-1 leading-tight">
                 {topic.description}
             </Text>
-            <Text className="text-gray-600">
-                Created on: {topic.createdDate}
-            </Text>
+            <View className="flex-row justify-between">
+                <Text className="text-gray-600">
+                    Created: {topic.createdDate}
+                </Text>
+                {!topic.getTopicCompleted() && (
+                    <Text className="text-gray-600">
+                        Due: {topic.dueDate}
+                    </Text>
+                )}
+            </View>
+
             {topic.getTopicCompleted() ? (
                 <Text className="text-gray-600">
                     Decision: {topic.finalDecision.content}

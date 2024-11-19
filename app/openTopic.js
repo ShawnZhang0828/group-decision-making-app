@@ -257,6 +257,13 @@ const OpenTopic = () => {
                 <Text className="font-lg">{topic.description}</Text>
             </View>
 
+            {!viewOnly && (
+                <View className="mb-4">
+                    <Text className="font-bold text-lg">Due</Text>
+                    <Text className="font-lg">{topic.dueDate}</Text>
+                </View>
+            )}
+
             <View className="flex-row justify-between border-b-2 pb-2 mb-2">
                 <View>
                     <Text className="font-bold text-lg">Created by</Text>
