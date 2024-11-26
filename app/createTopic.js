@@ -31,15 +31,14 @@ const CreateNewTopicScreen = () => {
     const [notificationVisible, setNotificationVisible] = useState(false);
 
     const [selectedTime, setSelectedTime] = useState(new Date());
-    const [showTimePicker, setShowTimePicker] = useState(false);
+    const [showDatePicker, setShowDatePicker] = useState(false);
 
-    const handleTimeChange = (event, selectedDate) => {
-        if (event.type === "set") {
-            // 'set' means the user selected a time
-            const currentTime = selectedDate || new Date();
-            setSelectedTime(currentTime);
+    // Date picker change handler
+    const handleDateChange = (event, date) => {
+        setShowDatePicker(false); // Close picker after selection
+        if (date) {
+            setSelectedTime(date);
         }
-        setShowTimePicker(false); // Hide the picker after selecting
     };
 
     // add a new item to one of participants, stakeholders, or options
@@ -77,7 +76,7 @@ const CreateNewTopicScreen = () => {
                 <TouchableOpacity
                     onPress={() => {
                         setNotificationVisible(false);
-                        router.replace("/home");
+                        router.back();
                     }}
                 >
                     <Text className="border-2 rounded-md p-2 mr-5 bg-red-300">
@@ -106,6 +105,7 @@ const CreateNewTopicScreen = () => {
                 contentContainerStyle={{ paddingBottom: 30 }}
                 automaticallyAdjustKeyboardInsets={true}
             >
+                {/* topic description */}
                 <Text className="text-lg font-bold mb-3 mt-5">
                     Describe the Topic
                 </Text>
@@ -115,8 +115,25 @@ const CreateNewTopicScreen = () => {
                     value={topic}
                     onChange={setTopic}
                     className="border border-gray-400 p-3 rounded-lg mb-5"
+                    style={{ height: 70 }}
                 />
 
+                {/* add options */}
+                <Text className="text-lg font-bold mb-3">Add an Option</Text>
+                <AddListItem
+                    placeholder="Enter an option"
+                    input={option}
+                    setInput={setOption}
+                    list={options}
+                    addItem={() => {
+                        addItemClicked(option, setOption, options, setOptions);
+                    }}
+                    removeItem={(item) => {
+                        removeItemClicked(item, options, setOptions);
+                    }}
+                />
+
+                {/* add participants */}
                 <Text className="text-lg font-bold mb-3">
                     Add a Participant
                 </Text>
@@ -138,6 +155,7 @@ const CreateNewTopicScreen = () => {
                     }}
                 />
 
+                {/* add stakeholders */}
                 <Text className="text-lg font-bold mb-3">
                     Add a Stakeholder
                 </Text>
@@ -159,31 +177,28 @@ const CreateNewTopicScreen = () => {
                     }}
                 />
 
-                <Text className="text-lg font-bold mb-3">Add an Option</Text>
-                <AddListItem
-                    placeholder="Enter an option"
-                    input={option}
-                    setInput={setOption}
-                    list={options}
-                    addItem={() => {
-                        addItemClicked(option, setOption, options, setOptions);
-                    }}
-                    removeItem={(item) => {
-                        removeItemClicked(item, options, setOptions);
-                    }}
-                />
-
+                {/* select due date */}
                 <Text className="text-lg font-bold mb-3">
                     Select a Due Date
                 </Text>
-                <DateTimePicker
-                    visible={showTimePicker}
-                    value={selectedTime}
-                    mode="date"
-                    is24Hour={false}
-                    display="default"
-                    onChange={handleTimeChange}
-                />
+                <TouchableOpacity
+                    onPress={() => setShowDatePicker(true)}
+                    className="bg-blue-600 px-3 py-1 rounded-full mb-5 flex-row justify-between items-center shadow-lg"
+                    style={{ borderWidth: 1, borderColor: "#00509E" }} // Adding a border for enhanced style
+                >
+                    <Text className="text-white font-bold text-lg text-center">
+                        {`Select Due Date: ${selectedTime.toLocaleDateString()}`}
+                    </Text>
+                </TouchableOpacity>
+
+                {showDatePicker && (
+                    <DateTimePicker
+                        value={selectedTime}
+                        mode="date"
+                        display="default"
+                        onChange={handleDateChange}
+                    />
+                )}
             </ScrollView>
 
             <CommonButton title="Save" onPress={saveTopic} />

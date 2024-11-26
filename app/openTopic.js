@@ -178,7 +178,7 @@ const OpenTopic = () => {
                     // to ensure the make decision popup is properly dismissed
                     setTimeout(() => {
                         setShowMakeDecisionPopup(false);
-                        router.replace("/home");
+                        router.back();
                     }, 100);
                 }}
             >
@@ -192,7 +192,7 @@ const OpenTopic = () => {
     // final decision popup content
     const decisionPopupContent = (
         <View className="flex-column justify-center">
-            <View className="max-h-48 mb-2">
+            <View className="max-h-52 mb-2">
                 <FlatList
                     data={optionsData}
                     renderItem={renderOption}

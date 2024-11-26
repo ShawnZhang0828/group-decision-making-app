@@ -8,6 +8,7 @@ import {
     Dimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
+import Icon from "react-native-vector-icons/AntDesign";
 import Collapsible from "react-native-collapsible";
 
 import { useUser } from "./contexts/userContext";
@@ -38,6 +39,8 @@ const HomeScreen = () => {
         router.push("/createTopic");
     };
 
+    const closedTopicsHeight = showOpenTopics ? windowHeight * 0.26 : windowHeight * 0.5;
+
     return (
         <View className="p-4 h-full">
             <View className="flex-row justify-between items-center mb-7">
@@ -58,11 +61,16 @@ const HomeScreen = () => {
                     onPress={() => {
                         setShowOpenTopics(!showOpenTopics);
                     }}
-                    className="bg-blue-500 p-4 rounded-lg mb-2"
+                    className="bg-blue-500 p-4 rounded-lg mb-2 flex-row justify-between items-center pr-5"
                 >
                     <Text className="text-white text-lg font-bold">
                         Open Topics
                     </Text>
+                    {showOpenTopics ? (
+                        <Icon name="down" size={16} color="white" />
+                    ) : (
+                        <Icon name="right" size={16} color="white" />
+                    )}
                 </TouchableOpacity>
                 <Collapsible collapsed={!showOpenTopics}>
                     <View
@@ -86,16 +94,21 @@ const HomeScreen = () => {
                     onPress={() => {
                         setShowClosedTopics(!showClosedTopics);
                     }}
-                    className="bg-blue-500 p-4 rounded-lg mb-2"
+                    className="bg-blue-500 p-4 rounded-lg mb-2  flex-row justify-between items-center pr-5"
                 >
                     <Text className="text-white text-lg font-bold">
                         Closed Topics
                     </Text>
+                    {showClosedTopics ? (
+                        <Icon name="down" size={16} color="white" />
+                    ) : (
+                        <Icon name="right" size={16} color="white" />
+                    )}
                 </TouchableOpacity>
                 <Collapsible collapsed={!showClosedTopics}>
                     <View
                         style={{
-                            maxHeight: windowHeight * (showOpenTopics ? 0.26 : 0.5),
+                            maxHeight: closedTopicsHeight,
                             overflow: "hidden",
                         }}
                     >
