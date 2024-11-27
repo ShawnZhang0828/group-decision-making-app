@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/cooperation.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.amujueee.groupdecisionmakingapp"
     },
     "web": {
       "bundler": "metro",
@@ -29,8 +30,13 @@
       "expo-router",
       "expo-font"
     ],
-    "expo": {
-      "assetBundlePatterns": ["**/*"]
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "7de7a690-1f10-4c9e-ac6e-159a4e343db8"
+      }
     }
   }
 }
